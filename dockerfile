@@ -1,14 +1,15 @@
 
 
 # Node server
-FROM node:12-alpine as node-server
-WORKDIR /src/app
-COPY ["package.json", "package-lock.json ."]
-RUN npm install
+FROM node:17-alpine as node-server
+WORKDIR /app
+COPY package.json .
+COPY package-lock.json .
+RUN yarn install
 COPY . .
-RUN npm build
+RUN yarn build
 
-FROM nginx:1.19.0 as nginx-server
+FROM nginx:1.19.0
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/build .
